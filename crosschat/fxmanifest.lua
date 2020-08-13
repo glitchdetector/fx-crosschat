@@ -10,13 +10,14 @@ author 'glitchdetector'
 contact 'glitchdetector@gmail.com'
 download 'https://github.com/glitchdetector/fx-crosschat'
 
-version '1.0'
+version '1.1'
 
 convar_category 'Cross Chat' {
     'Handles cross chat messages',
     {
         {"Host", "xchat_server", "CV_BOOL", "false", "Set this server as the host"},
         {"Port", "xchat_server_port", "CV_INT", 30220},
+        {"Password", "xchat_token", "CV_PASSWORD", ""},
         {"", "Connect to the target host if not set as host"},
         {"Host Target", "xchat_endpoint", "CV_STRING", "http://localhost:30220"},
     }

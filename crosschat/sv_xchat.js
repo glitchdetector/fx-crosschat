@@ -1,4 +1,4 @@
-const isServer = (GetConvar('xchat_server', 'false') == 'true')
+const isServer = (GetConvar('xchat_server', 'false') == 'true');
 
 if (isServer) {
 
@@ -6,7 +6,19 @@ if (isServer) {
     const http = require('http').createServer(app);
     const io = require('socket.io')(http);
 
-    http.listen(GetConvarInt('xchat_server_port', 30220), () => {});
+    http.listen(GetConvarInt('xchat_server_port', 30220), () => {
+        console.log('xchat: acting as host');
+    });
+
+    io.use((socket, next) => {
+        let pass = GetConvar('xchat_token', '');
+        if (pass == '') pass = GetConvar('rcon_password', '');
+        if (pass != '') {
+            const token = socket.handshake.headers['xchat-token'];
+            if (token != pass) return next(new Error('authentication error'));
+        }
+        return next();
+    });
 
     io.on('connection', (socket) => {
         console.log('xchat: new listener');
@@ -25,8 +37,11 @@ if (isServer) {
     });
 
 } else {
-
-    const ioc = require('socket.io-client')(GetConvar('xchat_endpoint', 'http://localhost'));
+    let pass = GetConvar('xchat_token', '');
+    if (pass == '') pass = GetConvar('rcon_password', '');
+    const ioc = require('socket.io-client')(GetConvar('xchat_endpoint', 'http://localhost'), {
+        transportOptions: { polling: { extraHeaders: { 'xchat-token': pass, }, }, },
+    });
     ioc.on('connect', () => { console.log('xchat: connected to host'); });
     ioc.on('disconnect', () => { console.log('xchat: disconnected from host'); });
     ioc.on('xmessage', (data) => { emit('xchat:receivedData', data); });

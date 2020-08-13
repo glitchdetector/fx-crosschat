@@ -32,13 +32,21 @@ Defaults to `false`, set to `true` to mark this FXServer as a host.
 ### xchat_server_port
 Defaults to `30220`, this is the port used by the sockets that send and receive the data.
 
+### xchat_token
+Defaults to nothing (empty string), this is the authentication token used by both client and host. **Note:** If no token is set, the `rcon_password` value is used instead. If `rcon_password` is also not set, the host will allow all connections.
+
 ### xchat_endpoint
 Defaults to `http://localhost`, if the FXServer is not set as a host, it will try to connect to this endpoint
 
 You might want to include the port in here aswell.
 
+## Authentication
+The `xchat_token` value must match on the host and clients. The `rcon_password` value is used if no token is set. No `rcon_password` allows all connections regardless of token.	
+
 ## Example Scenario
-You have two FXServers, one hosted on `420.69.621.0:30120` and one on `926.42.007.0:30120`
+You have two FXServers, one hosted on `420.69.621.0:30120` and one on `926.42.007.0:30120`. 
+
+Set the `xchat_token` value for both FXServers to any password you want, just make sure they're both the same!
 
 In the config for `420.69.621.0:30120`, you set the FXServer as a host (`xchat_server` to `true`) and the port (`xchat_server_port`) to `30220` 
 
